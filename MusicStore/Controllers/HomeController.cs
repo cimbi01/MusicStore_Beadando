@@ -13,8 +13,8 @@ namespace MusicStore.Controllers
         MusicStoreEntities storeDB = new MusicStoreEntities();
         //
         // GET: /Home/
-        
-        
+
+
         public ActionResult Index()
         {
             // Get most popular albums

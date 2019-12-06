@@ -7,10 +7,11 @@ using MusicStore.Models;
 
 namespace MusicStore.EntityContext
 {
-    public class SampleData : DropCreateDatabaseIfModelChanges<MusicStoreEntities>
+    public class SampleData : DropCreateDatabaseAlways<MusicStoreEntities>
     {
         protected override void Seed(MusicStoreEntities context)
         {
+            context.Accounts.Add(new Account() { UserName = "Admin", Email="admin@musictore.hu", IsAdmin = true, Password="Admin123!"});
             var genres = new List<Genre>
             {
                 new Genre { Name = "Rock" },
@@ -427,6 +428,7 @@ namespace MusicStore.EntityContext
                 new Album { Title = "Bach: The Cello Suites", Genre = genres.Single(g => g.Name == "Classical"), Price = 8.99M, Artist = artists.Single(a => a.Name == "Yo-Yo Ma"), AlbumArtUrl = "/Content/Images/placeholder.gif" },
                 new Album { Title = "Ao Vivo [IMPORT]", Genre = genres.Single(g => g.Name == "Latin"), Price = 8.99M, Artist = artists.Single(a => a.Name == "Zeca Pagodinho"), AlbumArtUrl = "/Content/Images/placeholder.gif" },
             }.ForEach(a => context.Albums.Add(a));
+            context.SaveChanges();
         }
     }
 }

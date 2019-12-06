@@ -7,6 +7,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using Mvc3ToolsUpdateWeb_Default.Models;
 using MusicStore.Models;
+using MusicStore.AccountManagement;
 
 namespace Mvc3ToolsUpdateWeb_Default.Controllers
 {
@@ -57,7 +58,7 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
                 {
                     logIn[0] = model.UserName;
                     logIn[1] = model.Password;
-                    if (Membership.ValidateUser(model.UserName, model.Password))
+                    if (AccountManager.ValidateUser(model.UserName, model.Password))
                     {
                         FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                         if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
