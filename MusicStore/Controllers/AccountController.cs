@@ -152,6 +152,8 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
         private void MigrateShoppingCart(string UserName)
         {
             // Associate shopping cart items with logged-in user
+            //visszaad egy üres shoppingcartot
+            // és beállítja a felhasznalo id-javal a cartid-t
             var cart = ShoppingCart.GetCart(this.HttpContext);
             cart.MigrateCart(UserName);
             Session[ShoppingCart.CartSessionKey] = UserName;

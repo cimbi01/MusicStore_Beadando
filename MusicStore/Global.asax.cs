@@ -14,6 +14,7 @@ namespace MusicStore
         {
             //Code First 数据库初始化
             System.Data.Entity.Database.SetInitializer(new MusicStore.EntityContext.SampleData());
+            System.Data.Entity.Database.SetInitializer(new MusicStore.EntityContext.MovieSampleData());
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

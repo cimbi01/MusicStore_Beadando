@@ -17,6 +17,7 @@ namespace MusicStore.Models
         public static ShoppingCart GetCart(HttpContextBase context)
         {
             var cart = new ShoppingCart();
+            //visszaadja a felhasználó nevét, vagy egy random temp azonositot
             cart.ShoppingCartId = cart.GetCartId(context);
             return cart;
         }
@@ -139,10 +140,12 @@ namespace MusicStore.Models
         {
             if (context.Session[CartSessionKey] == null)
             {
+                // ha van bejelentkezett felhasználó
                 if (!string.IsNullOrEmpty(context.User.Identity.Name))
                 {
                     context.Session[CartSessionKey] = context.User.Identity.Name;
                 }
+                // ha nincs bejelntkezett felhasznalo
                 else
                 {
                     // Generate a new random GUID using System.Guid class

@@ -29,7 +29,7 @@
 
                     if (Session["LoggedInUser"] == null)
                     {
-                        <a href="@Url.Content("Account/LogOn")">Bejelentkezés</a>
+                        <a href="@Url.Content("/Account/LogOn")">Bejelentkezés</a>
                     }
                     else if (((MusicStore.Models.Account)Session["LoggedInUser"]).IsAdmin)
                     {

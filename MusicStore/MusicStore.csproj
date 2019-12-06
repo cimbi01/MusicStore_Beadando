@@ -168,13 +168,16 @@
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\StoreManagerController.cs" />
-    <Compile Include="EntityContext\MusicStoreEntities.cs" />
-    <Compile Include="EntityContext\SampleData.cs" />
+    <Compile Include="EntityContext\MovieSampleData.cs" />
+    <Compile Include="EntityContext\MovieStoreEntities.cs" />
+    <Compile Include="EntityContext\Old\MusicStoreEntities.cs" />
+    <Compile Include="EntityContext\Old\SampleData.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\Movie.cs" />
     <Compile Include="Models\Old\AccountModels.cs" />
     <Compile Include="Models\Old\AccountViewModels.cs" />
     <Compile Include="Models\Album.cs" />
@@ -191,6 +194,7 @@
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\MovieD.mdf" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\home-showcase.png" />
@@ -274,9 +278,7 @@
     <Content Include="Views\ShoppingCart\CartSummary.cshtml" />
     <Content Include="Views\Store\GenreMenu.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
