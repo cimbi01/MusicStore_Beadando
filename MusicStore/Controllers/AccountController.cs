@@ -122,20 +122,8 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                // ChangePassword will throw an exception rather
-                // than return false in certain failure scenarios.
-                bool changePasswordSucceeded;
-                try
-                {
-                    MembershipUser currentUser = Membership.GetUser(User.Identity.Name, true /* userIsOnline */);
-                    changePasswordSucceeded = currentUser.ChangePassword(model.OldPassword, model.NewPassword);
-                }
-                catch (Exception)
-                {
-                    changePasswordSucceeded = false;
-                }
-
+                Account currentUser = ((Account)Session["LoggedInUser"]);
+                bool changePasswordSucceeded = AccountManager.ChangePassword(model, currentUser);
                 if (changePasswordSucceeded)
                 {
                     return RedirectToAction("ChangePasswordSuccess");

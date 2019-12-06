@@ -31,13 +31,14 @@
                     {
                         <a href="@Url.Content("Account/LogOn")">Bejelentkezés</a>
                     }
-                    else if(((MusicStore.Models.Account)Session["LoggedInUser"]).IsAdmin)
+                    else if (((MusicStore.Models.Account)Session["LoggedInUser"]).IsAdmin)
                     {
                         <a href="@Url.Content("~/StoreManager/")">Admin</a>
                     }
                     else
                     {
-                        <a href="#">Bejelentkezve</a>
+                        <a href="@Url.Content("/Account/ChangePassword")"> Jelszó Megváltoztatása</a>
+                        <a href="@Url.Content("/Account/LogOff")"> Kijelentkezés </a>
                     }
                 }
             </li>

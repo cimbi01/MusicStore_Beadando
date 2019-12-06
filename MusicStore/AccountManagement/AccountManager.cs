@@ -65,7 +65,7 @@ namespace MusicStore.AccountManagement
             // invalid password
             if((registerModel.Password.Length < 6 ||
                 registerModel.Password.Length > 100) ||
-                (registerModel.Password != registerModel.ConfirmPassword) )
+                (registerModel.Password != registerModel.ConfirmPassword))
             {
                 return AccountCreateStatus.InvalidPassword;
             }
@@ -92,11 +92,30 @@ namespace MusicStore.AccountManagement
             // nem dobott hibát azaz beletette az entitibe
             storeEntities.Accounts.Add(
                 new Account()
-                    {UserName = registerModel.UserName,
+                {
+                    UserName = registerModel.UserName,
                     Email = registerModel.Email,
-                    Password = registerModel.Password});
+                    Password = registerModel.Password
+                });
             storeEntities.SaveChanges();
             return AccountCreateStatus.Success;
+        }
+        public static bool ChangePassword(ChangePasswordModel changePasswordModel, Account current_user)
+        {
+            // invalid newpassword
+            if ((changePasswordModel.NewPassword.Length < 6 ||
+                changePasswordModel.NewPassword.Length > 100) ||
+                (changePasswordModel.NewPassword != changePasswordModel.ConfirmPassword) ||
+                (changePasswordModel.OldPassword != current_user.Password))
+            {
+                return false;
+            }
+            //valid new password
+            storeEntities.Accounts.First(account =>
+                account.Password == changePasswordModel.OldPassword).Password = changePasswordModel.NewPassword;
+            storeEntities.SaveChanges();
+            current_user.Password = changePasswordModel.NewPassword;
+            return true;
         }
     }
 }
