@@ -7,7 +7,7 @@ using System.Web.Security;
 namespace MusicStore.Models
 {
     //
-    public class AccountModel
+    public class AccountModels
     {
         [Required]
         public string UserName { get; set; }
@@ -20,6 +20,8 @@ namespace MusicStore.Models
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
     public class ChangePasswordModel
     {
