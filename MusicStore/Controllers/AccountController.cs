@@ -38,10 +38,9 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
 
                 #endregion
 
-                Session["LoggedInUser"] = AccountManager.GetAccount(model);
-                // Ha a model admin
-                if (AccountManager.IsAdmin(model))
+                if (AccountManager.ValidateAccount(model.UserName, model.Password))
                 {
+                    Session["LoggedInUser"] = AccountManager.GetAccount(model);
                     MigrateShoppingCart(model.UserName);
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
@@ -56,23 +55,7 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
                 }
                 else
                 {
-                    if (AccountManager.ValidateAccount(model.UserName, model.Password))
-                    {
-                        FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-                        if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                            && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
-                        {
-                            return Redirect(returnUrl);
-                        }
-                        else
-                        {
-                            return RedirectToAction("Index", "Home");
-                        }
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "The user name or password provided is incorrect.");
-                    }
+                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
                 }
             }
             // If we got this far, something failed, redisplay form
@@ -85,7 +68,7 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
-
+            Session["LoggedInUser"] = null;
             return RedirectToAction("Index", "Home");
         }
 
@@ -97,30 +80,18 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/Register
-
-        public ActionResult Register2(string felhasznalonev,string jelszo)
-        {
-            Session["LoginUser"] logIn[0] = felhasznalonev; //
-            logIn[1] = jelszo;
-            FormsAuthentication.SetAuthCookie(logIn[0], false /* createPersistentCookie */); //ez az authentikációs süti jelentkeztet be
-            return View();
-        }
-
         [HttpPost]
         public ActionResult Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
-                // Attempt to register the user
-                MembershipCreateStatus createStatus;
-                Membership.CreateUser(model.UserName, model.Password, model.Email, "question", "answer", true, null, out createStatus);
-
-                if (true)
+                AccountCreateStatus createStatus = AccountManager.CreateUser(model);
+                if (createStatus == AccountCreateStatus.Success)
                 {
                     MigrateShoppingCart(model.UserName);
+                    //belépés
                     FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
+                    Session["LoggedInUser"] = AccountManager.GetAccount(model);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -198,37 +169,37 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
             Session[ShoppingCart.CartSessionKey] = UserName;
         }
         #region Status Codes
-        private static string ErrorCodeToString(MembershipCreateStatus createStatus)
+        private static string ErrorCodeToString(AccountCreateStatus createStatus)
         {
             // See http://go.microsoft.com/fwlink/?LinkID=177550 for
             // a full list of status codes.
             switch (createStatus)
             {
-                case MembershipCreateStatus.DuplicateUserName:
+                case AccountCreateStatus.DuplicateUserName:
                     return "User name already exists. Please enter a different user name.";
 
-                case MembershipCreateStatus.DuplicateEmail:
+                case AccountCreateStatus.DuplicateEmail:
                     return "A user name for that e-mail address already exists. Please enter a different e-mail address.";
 
-                case MembershipCreateStatus.InvalidPassword:
+                case AccountCreateStatus.InvalidPassword:
                     return "The password provided is invalid. Please enter a valid password value.";
 
-                case MembershipCreateStatus.InvalidEmail:
+                case AccountCreateStatus.InvalidEmail:
                     return "The e-mail address provided is invalid. Please check the value and try again.";
 
-                case MembershipCreateStatus.InvalidAnswer:
+                case AccountCreateStatus.InvalidAnswer:
                     return "The password retrieval answer provided is invalid. Please check the value and try again.";
 
-                case MembershipCreateStatus.InvalidQuestion:
+                case AccountCreateStatus.InvalidQuestion:
                     return "The password retrieval question provided is invalid. Please check the value and try again.";
 
-                case MembershipCreateStatus.InvalidUserName:
+                case AccountCreateStatus.InvalidUserName:
                     return "The user name provided is invalid. Please check the value and try again.";
 
-                case MembershipCreateStatus.ProviderError:
+                case AccountCreateStatus.ProviderError:
                     return "The authentication provider returned an error. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
 
-                case MembershipCreateStatus.UserRejected:
+                case AccountCreateStatus.UserRejected:
                     return "The user creation request has been canceled. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
 
                 default:

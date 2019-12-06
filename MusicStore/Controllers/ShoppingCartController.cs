@@ -18,7 +18,7 @@ namespace MusicStore.Controllers
         {
             var cart = ShoppingCart.GetCart(this.HttpContext);
             // Set up our ViewModel
-            var user = Mvc3ToolsUpdateWeb_Default.Controllers.AccountController.logIn[0];
+            var user = ((Account)Session["LoggedInUser"]).UserName;
             var viewModel = new ShoppingCartViewModel
             {
                 CartItems = cart.GetCartItems(),
