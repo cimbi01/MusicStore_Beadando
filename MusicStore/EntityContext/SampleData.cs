@@ -7,7 +7,7 @@ using MusicStore.Models;
 
 namespace MusicStore.EntityContext
 {
-    public class SampleData : DropCreateDatabaseAlways<MusicStoreEntities>
+    public class SampleData : DropCreateDatabaseIfModelChanges<MusicStoreEntities>
     {
         protected override void Seed(MusicStoreEntities context)
         {
