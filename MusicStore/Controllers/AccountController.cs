@@ -38,10 +38,10 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
 
                 #endregion
 
-                if (model.UserName=="Admin"&&model.Password=="admin")
-                { //ez is kell
-                    logIn[0] = "Admin";
-                    logIn[1] = "admin";
+                Session["LoggedInUser"] = AccountManager.GetAccount(model);
+                // Ha a model admin
+                if (AccountManager.IsAdmin(model))
+                {
                     MigrateShoppingCart(model.UserName);
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
@@ -56,9 +56,7 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
                 }
                 else
                 {
-                    logIn[0] = model.UserName;
-                    logIn[1] = model.Password;
-                    if (AccountManager.ValidateUser(model.UserName, model.Password))
+                    if (AccountManager.ValidateAccount(model.UserName, model.Password))
                     {
                         FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                         if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
@@ -102,11 +100,9 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
         //
         // POST: /Account/Register
 
-        //2.lépés létrehozunk egy Register2 methódust az Account Controlerben és a logIn változót
-        public static string[] logIn = new string[2];
         public ActionResult Register2(string felhasznalonev,string jelszo)
         {
-            logIn[0] = felhasznalonev; //
+            Session["LoginUser"] logIn[0] = felhasznalonev; //
             logIn[1] = jelszo;
             FormsAuthentication.SetAuthCookie(logIn[0], false /* createPersistentCookie */); //ez az authentikációs süti jelentkeztet be
             return View();

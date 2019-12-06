@@ -16,17 +16,31 @@ namespace MusicStore.AccountManagement
         /// <param name="username">Felhasználónév</param>
         /// <param name="password">Jelszó</param>
         /// <returns></returns>
-        public static bool ValidateUser(string username, string password)
+        public static bool ValidateAccount(string username, string password)
         {
-            foreach (Account account in storeEntities.Accounts)
-            {
-                if(account.UserName == username &&
-                    account.Password == password)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return storeEntities.Accounts.Any(account =>
+                account.UserName == username &&
+                account.Password == password);
+        }
+        /// <summary>
+        /// Visszaadja az adatbázisban tárolt Account-t
+        /// </summary>
+        /// <param name="logOnModel">LogonModel amit a logonModel ad</param>
+        /// <returns></returns>
+        public static Account GetAccount(LogOnModel logOnModel)
+        {
+            return storeEntities.Accounts.First(account =>
+                account.UserName == logOnModel.UserName);
+        }
+        /// <summary>
+        ///Vissazaadja hogy a LogonModel Admin-e
+        /// </summary>
+        /// <param name="logOnModel"></param>
+        /// <returns></returns>
+        public static bool IsAdmin(LogOnModel logOnModel)
+        {
+            return storeEntities.Accounts.First(account =>
+                account.UserName == logOnModel.UserName).IsAdmin;
         }
     }
 }
