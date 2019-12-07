@@ -112,7 +112,7 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
         //
         // GET: /Account/ChangePassword
 
-        [Authorize]
+        [LoggedinFilterAttribute]
         public ActionResult ChangePassword()
         {
             return View();
@@ -121,7 +121,7 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
         //
         // POST: /Account/ChangePassword
 
-        [Authorize]
+        [LoggedinFilterAttribute]
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordModel model)
         {
@@ -159,7 +159,7 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
             // Associate shopping cart items with logged-in user
             //visszaad egy üres shoppingcartot
             // és beállítja a felhasznalo id-javal a cartid-t
-            var cart = ShoppingCart.GetCart(this.HttpContext);
+            var cart = ShoppingCart.GetCart(HttpContext);
 
             //csak akkor hívja meg ha előtte nem volt bejelentkezve senki
             cart.MigrateCart(UserName);

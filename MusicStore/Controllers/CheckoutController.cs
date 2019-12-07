@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace MusicStore.Controllers
 {
-    [Authorize]
     public class CheckoutController : Controller
     {
         readonly MusicStoreEntities storeDB = new MusicStoreEntities();

@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using MusicStore.Models;
 using MusicStore.EntityContext;
+using MusicStore.AccountManagement.Filters;
 
 namespace MusicStore.Controllers
 {
@@ -16,8 +17,7 @@ namespace MusicStore.Controllers
     /// Szerkeszthet, adhat hozzá, vehet el elemeket
     /// </summary>
     //暂时无法ASP WEB管理器
-    //[Authorize(Roles = "Administrator")]
-    [Authorize]
+    [AdminFilter]
     public class StoreManagerController : Controller
     {
         private readonly MusicStoreEntities db = new MusicStoreEntities();
