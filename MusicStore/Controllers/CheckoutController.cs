@@ -1,5 +1,6 @@
 ﻿using MusicStore.EntityContext;
 using MusicStore.Models;
+using MusicStore.Models.Database.Movie;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace MusicStore.Controllers
 {
     public class CheckoutController : Controller
     {
-        readonly MusicStoreEntities storeDB = new MusicStoreEntities();
+        readonly MovieStoreEntities storeDB = new MovieStoreEntities();
         //
         // GET: /Checkout/
         public ActionResult AddressAndPayment()
@@ -27,7 +28,7 @@ namespace MusicStore.Controllers
         [HttpPost]
         public ActionResult AddressAndPayment(FormCollection values)
         {
-            var order = new Order();
+            var order = new MovieOrder();
             TryUpdateModel(order);
             try
             {
@@ -36,7 +37,7 @@ namespace MusicStore.Controllers
                 //Process the order
                 var cart = ShoppingCart.GetCart(HttpContext);
                 cart.CreateOrder(order);
-                return RedirectToAction("Complete", new { id = order.OrderId });
+                return RedirectToAction("Complete", new { id = order.MovieOrderId });
             }
             catch
             {
@@ -49,8 +50,8 @@ namespace MusicStore.Controllers
         public ActionResult Complete(int id)
         {
             // Validate customer owns this order
-            bool isValid = this.storeDB.Orders.Any(
-            o => o.OrderId == id &&
+            bool isValid = this.storeDB.MovieOrders.Any(
+            o => o.MovieOrderId == id &&
             o.Username == User.Identity.Name);
             if (isValid)
             {

@@ -1,4 +1,5 @@
 ﻿using MusicStore.EntityContext;
+using MusicStore.Models.Database.Movie;
 using Mvc3ToolsUpdateWeb_Default.Controllers;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace MusicStore.Models
 {
     public class ShoppingCart
     {
-        readonly MusicStoreEntities storeDB = new MusicStoreEntities();
+        readonly MovieStoreEntities storeDB = new MovieStoreEntities();
         string ShoppingCartId { get; set; }
         //存在Session中的键值 保存ShoppingCartId
         public const string CartSessionKey = "CartId";
@@ -27,23 +28,23 @@ namespace MusicStore.Models
         {
             return GetCart(controller.HttpContext);
         }
-        public void AddToCart(Album album)
+        public void AddToCart(Movie movie)
         {
             // Get the matching cart and album instances
-            var cartItem = this.storeDB.Carts.SingleOrDefault(
-                c => c.CartId == ShoppingCartId
-                && c.AlbumId == album.AlbumId);
+            var cartItem = this.storeDB.MovieCarts.SingleOrDefault(
+                c => c.MovieCartId == ShoppingCartId
+                && c.MovieId == movie.MovieId);
             if (cartItem == null)
             {
                 // Create a new cart item if no cart item exists
-                cartItem = new Cart()
+                cartItem = new MovieCart()
                 {
-                    AlbumId=album.AlbumId,
-                    CartId=ShoppingCartId,
+                    MovieId=movie.MovieId,
+                    MovieCartId=ShoppingCartId,
                     Count=1,
                     DateCreated=DateTime.Now
                 };
-                this.storeDB.Carts.Add(cartItem);
+                this.storeDB.MovieCarts.Add(cartItem);
             }
             else
             {
@@ -55,9 +56,9 @@ namespace MusicStore.Models
         public int RemoveFromCart(int id)
         {
             // Get the cart
-            var cartItem = this.storeDB.Carts.Single(
-                cart => cart.CartId == ShoppingCartId
-                && cart.RecordId == id);
+            var cartItem = this.storeDB.MovieCarts.Single(
+                cart => cart.MovieCartId == ShoppingCartId
+                && cart.MovieRecordId == id);
             int itemCount = 0;
             if (cartItem != null)
             {
@@ -68,7 +69,7 @@ namespace MusicStore.Models
                 }
                 else
                 {
-                    this.storeDB.Carts.Remove(cartItem);
+                    this.storeDB.MovieCarts.Remove(cartItem);
                 }
                 this.storeDB.SaveChanges();
             }
@@ -76,22 +77,22 @@ namespace MusicStore.Models
         }
         public void EmptyCart()
         {
-            var cartItems = this.storeDB.Carts.Where(cart => cart.CartId == ShoppingCartId);
+            var cartItems = this.storeDB.MovieCarts.Where(cart => cart.MovieCartId == ShoppingCartId);
             foreach (var cartItem in cartItems)
             {
-                this.storeDB.Carts.Remove(cartItem);
+                this.storeDB.MovieCarts.Remove(cartItem);
             }
             this.storeDB.SaveChanges();
         }
-        public List<Cart> GetCartItems()
+        public List<MovieCart> GetCartItems()
         {
-            return this.storeDB.Carts.Where(cart => cart.CartId == ShoppingCartId).ToList();
+            return this.storeDB.MovieCarts.Where(cart => cart.MovieCartId == ShoppingCartId).ToList();
         }
         public int GetCount()
         {
             // Get the count of each item in the cart and sum them up
-            int? count = (from cartItems in this.storeDB.Carts
-                          where cartItems.CartId == ShoppingCartId
+            int? count = (from cartItems in this.storeDB.MovieCarts
+                          where cartItems.MovieCartId == ShoppingCartId
                           select (int?)cartItems.Count).Sum();
             // Return 0 if all entries are null
             return count ?? 0;
@@ -101,13 +102,13 @@ namespace MusicStore.Models
             // Multiply album price by count of that album to get
             // the current price for each of those albums in the cart
             // sum all album price totals to get the cart total
-            decimal? total = (from cartItem in this.storeDB.Carts
-                              where cartItem.CartId == ShoppingCartId
-                              select (int?)cartItem.Count * cartItem.Album.Price)
+            decimal? total = (from cartItem in this.storeDB.MovieCarts
+                              where cartItem.MovieCartId == ShoppingCartId
+                              select (int?)cartItem.Count * cartItem.Movie.MoviePrice)
                                 .Sum();
             return total ?? 0;
         }
-        public int CreateOrder(Order order)
+        public int CreateOrder(MovieOrder order)
         {
             //order have create and is going to update information
             decimal orderTotal = 0;
@@ -115,26 +116,26 @@ namespace MusicStore.Models
             // Iterate over the items in the cart, adding the order details for each
             foreach(var item in cartItem)
             {
-                var orderDetail=new OrderDetail()
+                var orderDetail=new MovieOrderDetail()
                 {
-                    AlbumId=item.AlbumId,
-                    OrderId=order.OrderId,
-                    UnitPrice=item.Album.Price,
+                    MovieId=item.MovieId,
+                    MovieOrderId=order.MovieOrderId,
+                    UnitPrice=item.Movie.MoviePrice,
                     Quantity=item.Count
                 };
                 // Set the order total of the shopping cart
-                orderTotal += (item.Count * item.Album.Price);
-                this.storeDB.OrderDetails.Add(orderDetail);
+                orderTotal += (item.Count * item.Movie.MoviePrice);
+                this.storeDB.MovieOrderDetails.Add(orderDetail);
             }
             // Set the order's total to the orderTotal count
             order.Total = orderTotal;
             //Save Order
-            this.storeDB.Orders.Add(order);
+            this.storeDB.MovieOrders.Add(order);
             this.storeDB.SaveChanges();
             // Empty the shopping cart
             EmptyCart();
             // Return the OrderId as the confirmation number
-            return order.OrderId;
+            return order.MovieOrderId;
 
         }
         // We're using HttpContextBase to allow access to cookies.
@@ -156,19 +157,19 @@ namespace MusicStore.Models
         // be associated with their username
         public void MigrateCart(string userName)
         {
-            var shoppingCart = this.storeDB.Carts.Where(c => c.CartId == ShoppingCartId);
-            foreach (Cart item in shoppingCart)
+            var shoppingCart = this.storeDB.MovieCarts.Where(c => c.MovieCartId == ShoppingCartId);
+            foreach (MovieCart item in shoppingCart)
             {
                 // ha már van ilyen elem, akkor a count-ot növelje majd törölje
-                Cart cart = this.storeDB.Carts.FirstOrDefault(c => c.AlbumId == item.AlbumId && c.CartId == userName);
+                MovieCart cart = this.storeDB.MovieCarts.FirstOrDefault(c => c.MovieId == item.MovieId && c.MovieCartId == userName);
                 if(cart != null)
                 {
                     cart.Count++;
-                    this.storeDB.Carts.Remove(item);
+                    this.storeDB.MovieCarts.Remove(item);
                 }
                 else
                 {
-                    item.CartId = userName;
+                    item.MovieCartId = userName;
                 }
             }
             this.storeDB.SaveChanges();

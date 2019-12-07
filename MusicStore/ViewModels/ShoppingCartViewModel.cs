@@ -1,4 +1,5 @@
 ﻿using MusicStore.Models;
+using MusicStore.Models.Database.Movie;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace MusicStore.ViewModels
 {
     public class ShoppingCartViewModel
     {
-        public List<Cart> CartItems { get; set; }
+        public List<MovieCart> CartItems { get; set; }
         public decimal CartTotal { get; set; }
     }
 }

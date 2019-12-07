@@ -9,7 +9,7 @@ namespace MusicStore.AccountManagement
 {
     public static class AccountManager
     {
-        private static MusicStoreEntities storeEntities = new MusicStoreEntities();
+        private static MovieStoreEntities storeEntities = new MovieStoreEntities();
         /// <summary>
         /// Validálja, hogy létezik-e ilyen User ezzel a jelszóval az adatbázisban
         /// </summary>

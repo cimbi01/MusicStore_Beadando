@@ -11,7 +11,7 @@ namespace MusicStore.Controllers
 {
     public class ShoppingCartController : Controller
     {
-        readonly MusicStoreEntities storeDB = new MusicStoreEntities();
+        readonly MovieStoreEntities storeDB = new MovieStoreEntities();
         //
         // GET: /ShoppingCart/
         /// <summary>
@@ -42,8 +42,8 @@ namespace MusicStore.Controllers
         public ActionResult AddToCart(int id)
         {
             // Retrieve the album from the database
-            var addedAlbum = storeDB.Albums
-            .Single(album => album.AlbumId == id);
+            var addedAlbum = storeDB.Movies
+            .Single(movie => movie.MovieId == id);
             // Add it to the shopping cart
             var cart = ShoppingCart.GetCart(this.HttpContext);
             cart.AddToCart(addedAlbum);
@@ -65,8 +65,8 @@ namespace MusicStore.Controllers
             // Remove the item from the cart
             var cart = ShoppingCart.GetCart(this.HttpContext);
             // Get the name of the album to display confirmation
-            string albumName = storeDB.Carts
-            .Single(item => item.RecordId == id).Album.Title;
+            string albumName = storeDB.MovieCarts
+            .Single(item => item.MovieRecordId == id).Movie.MovieTitle;
             // Remove from cart
             int itemCount = cart.RemoveFromCart(id);
             // Display the confirmation message
