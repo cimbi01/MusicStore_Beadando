@@ -1,4 +1,5 @@
 ﻿using MusicStore.Models;
+using MusicStore.Models.Database.Movie;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -10,11 +11,15 @@ namespace MusicStore.EntityContext
     public class MovieStoreEntities : DbContext
     {
         public DbSet<Movie> Movies { get; set; }
-        public DbSet<Cart> Carts { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<MovieGenre> MovieGenres { get; set; }
+        public DbSet<MovieDirector> MovieDirectors { get; set; }
+        public DbSet<MovieCart> MovieCarts { get; set; }
+        public DbSet<MovieOrder> MovieOrders { get; set; }
+        public DbSet<MovieOrderDetail> MovieOrderDetails { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public MovieStoreEntities()
-        {}
+        {
+            Database.SetInitializer(new MovieSampleData());
+        }
     }
 }

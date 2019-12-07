@@ -19,6 +19,9 @@ namespace MusicStore.Controllers
         {
             // Get most popular albums
             var albums = GetTopSellingAlbums(5);
+            // moviestore inicializálás
+            MovieStoreEntities movieStoreEntities = new MovieStoreEntities();
+            movieStoreEntities.Movies.Max(m => m.MovieId);
             return View(albums);
         }
         public List<Album> GetTopSellingAlbums(int count)

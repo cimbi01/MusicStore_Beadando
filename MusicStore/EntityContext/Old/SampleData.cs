@@ -12,7 +12,21 @@ namespace MusicStore.EntityContext
         protected override void Seed(MusicStoreEntities context)
         {
             // Admin hozzáadása
-            context.Accounts.Add(new Account() { UserName = "Admin", Email="admin@musictore.hu", IsAdmin = true, Password="Admin123!"});
+            context.Accounts.Add(new Account()
+            {
+                UserName = "Admin",
+                Email = "admin@musictore.hu",
+                IsAdmin = true,
+                Password = "Admin123!"
+            });
+            //felhasznalo, hogy ne kelljen mindig regisztralni a teszthez
+            context.Accounts.Add(new Account()
+            {
+                UserName = "asd",
+                Email = "asd@asd.asd",
+                IsAdmin = false,
+                Password = "asd123"
+            });
             var genres = new List<Genre>
             {
                 new Genre { Name = "Rock" },

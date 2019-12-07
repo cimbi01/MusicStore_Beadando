@@ -18,6 +18,7 @@ namespace MusicStore.EntityContext
         public DbSet<Account> Accounts { get; set; }
         public MusicStoreEntities()
         {
+            Database.SetInitializer(new SampleData());
         }
     }
 }

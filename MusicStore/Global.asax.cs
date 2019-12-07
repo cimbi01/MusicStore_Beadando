@@ -13,7 +13,6 @@ namespace MusicStore
         protected void Application_Start()
         {
             //Code First 数据库初始化
-            System.Data.Entity.Database.SetInitializer(new MusicStore.EntityContext.SampleData());
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
