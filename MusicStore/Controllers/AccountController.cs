@@ -8,6 +8,7 @@ using System.Web.Security;
 using Mvc3ToolsUpdateWeb_Default.Models;
 using MusicStore.Models;
 using MusicStore.AccountManagement;
+using MusicStore.AccountManagement.Filters;
 
 namespace Mvc3ToolsUpdateWeb_Default.Controllers
 {
@@ -64,7 +65,7 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
 
         //
         // GET: /Account/LogOff
-
+        [LoggedinFilterAttribute]
         public ActionResult LogOff()
         {
             Session[LOGGEDINUSER_SESSION_KEY] = null;

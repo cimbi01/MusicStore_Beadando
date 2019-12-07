@@ -158,6 +158,7 @@
   <ItemGroup>
     <Compile Include="AccountManagement\AccountCreateStatus.cs" />
     <Compile Include="AccountManagement\AccountManager.cs" />
+    <Compile Include="AccountManagement\Filters\LoggedinFilterAttribute.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />

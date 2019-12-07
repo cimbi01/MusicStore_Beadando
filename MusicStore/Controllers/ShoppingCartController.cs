@@ -11,9 +11,13 @@ namespace MusicStore.Controllers
 {
     public class ShoppingCartController : Controller
     {
-        MusicStoreEntities storeDB = new MusicStoreEntities();
+        readonly MusicStoreEntities storeDB = new MusicStoreEntities();
         //
         // GET: /ShoppingCart/
+        /// <summary>
+        /// visszaadja username alapján a chart-ot
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             var cart = ShoppingCart.GetCart(this.HttpContext);
@@ -28,6 +32,13 @@ namespace MusicStore.Controllers
         }
         //
         // GET: /Store/AddToCart/5
+        /// <summary>
+        ///AlbumId alapján
+        ///a username-hez tartozo chart-hoz
+        ///hozzáadja az albumot
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult AddToCart(int id)
         {
             // Retrieve the album from the database
@@ -41,6 +52,13 @@ namespace MusicStore.Controllers
         }
         //
         // AJAX: /ShoppingCart/RemoveFromCart/5
+
+        /// <summary>
+        /// Albumid alapjan eltávolítja az Albumot
+        /// A username-hez tartozp Chart-ból
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult RemoveFromCart(int id)
         {
@@ -66,6 +84,9 @@ namespace MusicStore.Controllers
         //
         // GET: /ShoppingCart/CartSummary
         //返回的一个子视图
+        /// <summary>
+        /// Visszaadja, hogy hány elem van a cart-ban
+        /// <returns></returns>
         [ChildActionOnly]
         public ActionResult CartSummary()
         {

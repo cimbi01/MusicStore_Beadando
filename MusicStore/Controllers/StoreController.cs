@@ -11,9 +11,15 @@ namespace MusicStore.Controllers
 {
     public class StoreController : Controller
     {
-        private MusicStoreEntities storeDB = new MusicStoreEntities();
+        private readonly MusicStoreEntities storeDB = new MusicStoreEntities();
         //
         // GET: /Store/
+
+            /// <summary>
+        /// Kilistázza a műfajokat
+        /// </summary>
+        /// <returns></returns>
+
         public ActionResult Index()
         {
             var genres = storeDB.Genres.ToList();
@@ -21,16 +27,28 @@ namespace MusicStore.Controllers
         }
         //
         // GET: /Store/Browse
+
+        /// <summary>
+        ///A az albumokat amiknek a genre-jük genre továbbadja a view-nak
+        /// </summary>
+        /// <param name="genre"></param>
+        /// <returns></returns>
         public ActionResult Browse(string genre)
         {
             // Retrieve Genre and its Associated Albums from database
             //Include("Albums")指定返回结果要包含关联Album
             Genre example = storeDB.Genres.Include("Albums").Single(p => p.Name == genre);
-            List<Album> albums = example.Albums;
+            //List<Album> albums = example.Albums;
             return View(example);
         }
         //
         // GET: /Store/Details
+
+        /// <summary>
+        // Az AlbumId alapján lekéri az albumot és azt az albumot adja tovább a View-nak
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -42,12 +60,20 @@ namespace MusicStore.Controllers
         }
         //
         // GET: /Store/GenreMenu
+
+        /// <summary>
+        /// Oldal sáv a genreknek
+        /// </summary>
+        /// <returns></returns>
         [ChildActionOnly]
+
         public ActionResult GenreMenu()
         {
             var genres = storeDB.Genres.ToList();
             return PartialView(genres);
         }
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

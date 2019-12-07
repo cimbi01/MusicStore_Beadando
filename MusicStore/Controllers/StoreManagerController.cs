@@ -11,12 +11,16 @@ using MusicStore.EntityContext;
 
 namespace MusicStore.Controllers
 {
+    /// <summary>
+    /// Csak az admin
+    /// Szerkeszthet, adhat hozzá, vehet el elemeket
+    /// </summary>
     //暂时无法ASP WEB管理器
     //[Authorize(Roles = "Administrator")]
     [Authorize]
     public class StoreManagerController : Controller
     {
-        private MusicStoreEntities db = new MusicStoreEntities();
+        private readonly MusicStoreEntities db = new MusicStoreEntities();
 
         // GET: /StoreManager/
         public ActionResult Index()

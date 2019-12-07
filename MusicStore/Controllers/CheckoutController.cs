@@ -11,8 +11,7 @@ namespace MusicStore.Controllers
     [Authorize]
     public class CheckoutController : Controller
     {
-        MusicStoreEntities storeDB = new MusicStoreEntities();
-        private const string PromoCode = "FREE";
+        readonly MusicStoreEntities storeDB = new MusicStoreEntities();
         //
         // GET: /Checkout/
         public ActionResult AddressAndPayment()
@@ -21,6 +20,11 @@ namespace MusicStore.Controllers
         }
         //
         // POST: /Checkout/AddressAndPayment
+        /// <summary>
+        /// Submit order-re kattintva lefut
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult AddressAndPayment(FormCollection values)
         {
@@ -28,23 +32,12 @@ namespace MusicStore.Controllers
             TryUpdateModel(order);
             try
             {
-                //judge PromoCode
-                if (!string.Equals(values["PromoCode"], PromoCode, StringComparison.OrdinalIgnoreCase))
-                {
-                    return View(order);
-                }
-                else
-                {
-                    order.Username = User.Identity.Name;
-                    order.OrderDate = DateTime.Now;
-                    //Save Order
-                    storeDB.Orders.Add(order);
-                    storeDB.SaveChanges();
-                    //Process the order
-                    var cart = ShoppingCart.GetCart(this.HttpContext);
-                    cart.CreateOrder(order);
-                    return RedirectToAction("Complete", new { id = order.OrderId });
-                }
+                order.Username = User.Identity.Name;
+                order.OrderDate = DateTime.Now;
+                //Process the order
+                var cart = ShoppingCart.GetCart(HttpContext);
+                cart.CreateOrder(order);
+                return RedirectToAction("Complete", new { id = order.OrderId });
             }
             catch
             {
@@ -57,7 +50,7 @@ namespace MusicStore.Controllers
         public ActionResult Complete(int id)
         {
             // Validate customer owns this order
-            bool isValid = storeDB.Orders.Any(
+            bool isValid = this.storeDB.Orders.Any(
             o => o.OrderId == id &&
             o.Username == User.Identity.Name);
             if (isValid)
