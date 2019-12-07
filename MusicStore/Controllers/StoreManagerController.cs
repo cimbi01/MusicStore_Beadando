@@ -25,7 +25,7 @@ namespace MusicStore.Controllers
         // GET: /StoreManager/
         public ActionResult Index()
         {
-            var albums = db.Albums.Include(a => a.Artist).Include(a => a.Genre);
+            var albums = this.db.Albums.Include(a => a.Artist).Include(a => a.Genre);
             return View(albums.ToList());
         }
 
@@ -36,7 +36,7 @@ namespace MusicStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
+            Album album = this.db.Albums.Find(id);
             if (album == null)
             {
                 return HttpNotFound();
@@ -50,8 +50,8 @@ namespace MusicStore.Controllers
             //动态表达式
             //1.传递数据到UI
             //SelectList重要
-            ViewBag.ArtistId = new SelectList(db.Artists, "ArtistId", "Name");
-            ViewBag.GenreId = new SelectList(db.Genres, "GenreId", "Name");
+            ViewBag.ArtistId = new SelectList(this.db.Artists, "ArtistId", "Name");
+            ViewBag.GenreId = new SelectList(this.db.Genres, "GenreId", "Name");
             return View();
         }
 
@@ -67,13 +67,13 @@ namespace MusicStore.Controllers
             //重定向到index
             if (ModelState.IsValid)
             {
-                db.Albums.Add(album);
-                db.SaveChanges();
+                this.db.Albums.Add(album);
+                this.db.SaveChanges();
                 return RedirectToAction("Index");
             }
             //否则返回Create View并且显示错误信息
-            ViewBag.ArtistId = new SelectList(db.Artists, "ArtistId", "Name", album.ArtistId);
-            ViewBag.GenreId = new SelectList(db.Genres, "GenreId", "Name", album.GenreId);
+            ViewBag.ArtistId = new SelectList(this.db.Artists, "ArtistId", "Name", album.ArtistId);
+            ViewBag.GenreId = new SelectList(this.db.Genres, "GenreId", "Name", album.GenreId);
             return View(album);
         }
 
@@ -84,13 +84,13 @@ namespace MusicStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
+            Album album = this.db.Albums.Find(id);
             if (album == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ArtistId = new SelectList(db.Artists, "ArtistId", "Name", album.ArtistId);
-            ViewBag.GenreId = new SelectList(db.Genres, "GenreId", "Name", album.GenreId);
+            ViewBag.ArtistId = new SelectList(this.db.Artists, "ArtistId", "Name", album.ArtistId);
+            ViewBag.GenreId = new SelectList(this.db.Genres, "GenreId", "Name", album.GenreId);
             return View(album);
         }
 
@@ -103,12 +103,12 @@ namespace MusicStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(album).State = EntityState.Modified;
-                db.SaveChanges();
+                this.db.Entry(album).State = EntityState.Modified;
+                this.db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ArtistId = new SelectList(db.Artists, "ArtistId", "Name", album.ArtistId);
-            ViewBag.GenreId = new SelectList(db.Genres, "GenreId", "Name", album.GenreId);
+            ViewBag.ArtistId = new SelectList(this.db.Artists, "ArtistId", "Name", album.ArtistId);
+            ViewBag.GenreId = new SelectList(this.db.Genres, "GenreId", "Name", album.GenreId);
             return View(album);
         }
 
@@ -119,7 +119,7 @@ namespace MusicStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
+            Album album = this.db.Albums.Find(id);
             if (album == null)
             {
                 //404方法
@@ -133,9 +133,9 @@ namespace MusicStore.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Album album = db.Albums.Find(id);
-            db.Albums.Remove(album);
-            db.SaveChanges();
+            Album album = this.db.Albums.Find(id);
+            this.db.Albums.Remove(album);
+            this.db.SaveChanges();
             //采用重定向
             return RedirectToAction("Index");
         }
@@ -144,7 +144,7 @@ namespace MusicStore.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                this.db.Dispose();
             }
             base.Dispose(disposing);
         }

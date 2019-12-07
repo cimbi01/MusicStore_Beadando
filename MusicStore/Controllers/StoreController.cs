@@ -22,7 +22,7 @@ namespace MusicStore.Controllers
 
         public ActionResult Index()
         {
-            var genres = storeDB.Genres.ToList();
+            var genres = this.storeDB.Genres.ToList();
             return View(genres);
         }
         //
@@ -37,7 +37,7 @@ namespace MusicStore.Controllers
         {
             // Retrieve Genre and its Associated Albums from database
             //Include("Albums")指定返回结果要包含关联Album
-            Genre example = storeDB.Genres.Include("Albums").Single(p => p.Name == genre);
+            Genre example = this.storeDB.Genres.Include("Albums").Single(p => p.Name == genre);
             //List<Album> albums = example.Albums;
             return View(example);
         }
@@ -55,7 +55,7 @@ namespace MusicStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = storeDB.Albums.Find(id);
+            Album album = this.storeDB.Albums.Find(id);
             return View(album);
         }
         //
@@ -69,7 +69,7 @@ namespace MusicStore.Controllers
 
         public ActionResult GenreMenu()
         {
-            var genres = storeDB.Genres.ToList();
+            var genres = this.storeDB.Genres.ToList();
             return PartialView(genres);
         }
 
@@ -78,7 +78,7 @@ namespace MusicStore.Controllers
         {
             if (disposing)
             {
-                storeDB.Dispose();
+                this.storeDB.Dispose();
             }
             base.Dispose(disposing);
         }
