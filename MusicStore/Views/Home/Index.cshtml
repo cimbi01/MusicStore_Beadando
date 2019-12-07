@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MusicStore.Models.Album>
+﻿@model IEnumerable<MusicStore.Models.Database.Movie.Movie>
 @{
     //加载布局页面
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,15 +7,15 @@
 
 <div id="promotion">
 </div>
-<h2>Music Stre Home Page</h2>
+<h2>Movie Store Home Page</h2>
 <h3><em>Fresh</em>off the grill</h3>
 <ul>
-    @foreach (var album in @Model)
+    @foreach (var movie in @Model)
     {
         <li>
-            <a href="@Url.Action("Details", "Store", new { id=album.AlbumId})">
-                <img alt="@album.Title" src="@album.AlbumArtUrl" />
-                <span>@album.Title</span>
+            <a href="@Url.Action("Details", "Store", new { id=movie.MovieId})">
+                <img alt="@movie.MovieTitle" src="@movie.MoviePosterUrl" />
+                <span>@movie.MovieTitle</span>
             </a>
         </li>
     }

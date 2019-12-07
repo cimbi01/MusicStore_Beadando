@@ -1,5 +1,6 @@
 ﻿using MusicStore.EntityContext;
 using MusicStore.Models;
+using MusicStore.Models.Database.Movie;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,26 +11,23 @@ namespace MusicStore.Controllers
 {
     public class HomeController : Controller
     {
-        MusicStoreEntities storeDB = new MusicStoreEntities();
+        MovieStoreEntities storeDB = new MovieStoreEntities();
         //
         // GET: /Home/
 
 
         public ActionResult Index()
         {
-            // Get most popular albums
-            var albums = GetTopSellingAlbums(5);
-            // moviestore inicializálás
-            MovieStoreEntities movieStoreEntities = new MovieStoreEntities();
-            movieStoreEntities.Movies.Max(m => m.MovieId);
-            return View(albums);
+            // Get most popular movies
+            var movies = GetTopSellingMovies(5);
+            return View(movies);
         }
-        public List<Album> GetTopSellingAlbums(int count)
+        public List<Movie> GetTopSellingMovies(int count)
         {
             // Group the order details by album and return
             // the albums with the highest count
-            return storeDB.Albums
-                .OrderByDescending(a => a.OrderDetails.Count())
+            return storeDB.Movies
+                .OrderByDescending(m => m.MovieOrderDetails.Count())
                 .Take(count)
                 .ToList();
         }
