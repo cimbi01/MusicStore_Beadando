@@ -1,5 +1,6 @@
 ﻿using MusicStore.EntityContext;
 using MusicStore.Models;
+using MusicStore.Models.Database.Movie;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace MusicStore.Controllers
 {
     public class StoreController : Controller
     {
-        private readonly MusicStoreEntities storeDB = new MusicStoreEntities();
+        private readonly MovieStoreEntities storeDB = new MovieStoreEntities();
         //
         // GET: /Store/
 
@@ -22,7 +23,7 @@ namespace MusicStore.Controllers
 
         public ActionResult Index()
         {
-            var genres = this.storeDB.Genres.ToList();
+            var genres = this.storeDB.MovieGenres.ToList();
             return View(genres);
         }
         //
@@ -37,8 +38,7 @@ namespace MusicStore.Controllers
         {
             // Retrieve Genre and its Associated Albums from database
             //Include("Albums")指定返回结果要包含关联Album
-            Genre example = this.storeDB.Genres.Include("Albums").Single(p => p.Name == genre);
-            //List<Album> albums = example.Albums;
+            MovieGenre example = this.storeDB.MovieGenres.Include("Movies").Single(p => p.MovieGenreName == genre);
             return View(example);
         }
         //
@@ -55,8 +55,8 @@ namespace MusicStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = this.storeDB.Albums.Find(id);
-            return View(album);
+            Movie movie = this.storeDB.Movies.Find(id);
+            return View(movie);
         }
         //
         // GET: /Store/GenreMenu
@@ -69,7 +69,7 @@ namespace MusicStore.Controllers
 
         public ActionResult GenreMenu()
         {
-            var genres = this.storeDB.Genres.ToList();
+            var genres = this.storeDB.MovieGenres.ToList();
             return PartialView(genres);
         }
 

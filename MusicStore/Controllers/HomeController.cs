@@ -11,7 +11,7 @@ namespace MusicStore.Controllers
 {
     public class HomeController : Controller
     {
-        MovieStoreEntities storeDB = new MovieStoreEntities();
+        readonly MovieStoreEntities storeDB = new MovieStoreEntities();
         //
         // GET: /Home/
 
@@ -26,8 +26,8 @@ namespace MusicStore.Controllers
         {
             // Group the order details by album and return
             // the albums with the highest count
-            return storeDB.Movies
-                .OrderByDescending(m => m.MovieOrderDetails.Count())
+            return this.storeDB.Movies
+                .OrderByDescending(m => m.MovieOrderDetails.Count)
                 .Take(count)
                 .ToList();
         }

@@ -1,26 +1,26 @@
-﻿@model MusicStore.Models.Album
+﻿@model MusicStore.Models.Database.Movie.Movie
 
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.Title</h2>
+<h2>@Model.MovieTitle</h2>
 <p>
-    <img alt="@Model.Title" src="@Model.AlbumArtUrl"/>
+    <img alt="@Model.MovieTitle" src="@Model.MoviePosterUrl"/>
 </p>
 <div id="album-details">
     <p>
-        <em>Genre:</em>@Model.Genre.Name
+        <em>Genre:</em> @Model.MovieGenre.MovieGenreName
     </p>
     <p>
-        <em>Artist:</em> @Model.Artist.Name
+        <em>Director:</em> @Model.MovieDirector.MovieDirectorName
     </p>
     <p>
-        <em>Price:</em> @String.Format("{0:F}", Model.Price)
+        <em>Price:</em> @String.Format("{0:F}", Model.MoviePrice)
     </p>
     <p class="button">
-        @Html.ActionLink("Add to Cart","AddToCart","ShoppingCart", new { id = Model.AlbumId }, "")
+        @Html.ActionLink("Add to Cart","AddToCart","ShoppingCart", new { id = Model.MovieId }, "")
     </p>
 </div>
 

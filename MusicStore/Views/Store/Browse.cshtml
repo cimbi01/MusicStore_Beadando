@@ -1,20 +1,20 @@
-﻿@model MusicStore.Models.Genre
+﻿@model MusicStore.Models.Database.Movie.MovieGenre
 
 @{
-    ViewBag.Title = "Browse Albums";
+    ViewBag.Title = "Browse Movies";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="genre">
     <h3>
-        <em>@Model.Name</em>Albums
+        <em>@Model.MovieGenreName</em> Movies
     </h3>
     <ul>
-        @foreach (var album in Model.Albums)
+        @foreach (var movie in Model.Movies)
         {
             <li>
-                <a href="@Url.Action("Details",new { id = album.AlbumId })">
-                    <img alt="@album.Title" src="@album.AlbumArtUrl" />
-                     <span>@album.Title</span>
+                <a href="@Url.Action("Details",new { id = movie.MovieId })">
+                    <img alt="@movie.MovieTitle" src="@movie.MoviePosterUrl" />
+                     <span>@movie.MovieTitle</span>
                 </a>
             </li>
         }
