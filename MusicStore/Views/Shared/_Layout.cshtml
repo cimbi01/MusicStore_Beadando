@@ -27,11 +27,11 @@
 
                 @{
 
-                    if (Session["LoggedInUser"] == null)
+                    if (Session[Mvc3ToolsUpdateWeb_Default.Controllers.AccountController.LOGGEDINUSER_SESSION_KEY] == null)
                     {
                         <a href="@Url.Content("/Account/LogOn")">Bejelentkezés</a>
                     }
-                    else if (((MusicStore.Models.Account)Session["LoggedInUser"]).IsAdmin)
+                    else if (((MusicStore.Models.Account)Session[Mvc3ToolsUpdateWeb_Default.Controllers.AccountController.LOGGEDINUSER_SESSION_KEY]).IsAdmin)
                     {
                         <a href="@Url.Content("~/StoreManager/")">Admin</a>
                     }

@@ -1,4 +1,5 @@
 ﻿using MusicStore.EntityContext;
+using Mvc3ToolsUpdateWeb_Default.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,21 +139,15 @@ namespace MusicStore.Models
         // We're using HttpContextBase to allow access to cookies.
         public string GetCartId(HttpContextBase context)
         {
-            if (context.Session[CartSessionKey] == null)
+            // ha van bejelentkezett user
+            if (((Account)context.Session[AccountController.LOGGEDINUSER_SESSION_KEY]) != null)
             {
-                // ha van bejelentkezett felhasználó
-                if (!string.IsNullOrEmpty(context.User.Identity.Name))
-                {
-                    context.Session[CartSessionKey] = context.User.Identity.Name;
-                }
-                // ha nincs bejelntkezett felhasznalo
-                else
-                {
-                    // Generate a new random GUID using System.Guid class
-                    Guid tempCartId = Guid.NewGuid();
-                    // Send tempCartId back to client as a cookie
-                    context.Session[CartSessionKey] = tempCartId.ToString();
-                }
+                context.Session[CartSessionKey] = ((Account)context.Session [AccountController.LOGGEDINUSER_SESSION_KEY]).UserName;
+            }
+            // ha nincs bejelentkezett felhasznalo
+            else
+            {
+                context.Session[CartSessionKey] = "";
             }
             return context.Session[CartSessionKey].ToString();
         }
@@ -163,7 +158,17 @@ namespace MusicStore.Models
             var shoppingCart = storeDB.Carts.Where(c => c.CartId == ShoppingCartId);
             foreach (Cart item in shoppingCart)
             {
-                item.CartId = userName;
+                // ha már van ilyen elem, akkor a count-ot növelje majd törölje
+                Cart cart = storeDB.Carts.FirstOrDefault(c => c.AlbumId == item.AlbumId && c.CartId == userName);
+                if(cart != null)
+                {
+                    cart.Count++;
+                    storeDB.Carts.Remove(item);
+                }
+                else
+                {
+                    item.CartId = userName;
+                }
             }
             storeDB.SaveChanges();
         }

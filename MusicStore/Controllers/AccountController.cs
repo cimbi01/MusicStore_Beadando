@@ -13,7 +13,7 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
 {
     public class AccountController : Controller
     {
-
+        public const string LOGGEDINUSER_SESSION_KEY = "LoggedInUser";
         //
         // GET: /Account/LogOn
 
@@ -40,8 +40,8 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
 
                 if (AccountManager.ValidateAccount(model.UserName, model.Password))
                 {
-                    Session["LoggedInUser"] = AccountManager.GetAccount(model);
                     MigrateShoppingCart(model.UserName);
+                    Session[LOGGEDINUSER_SESSION_KEY] = AccountManager.GetAccount(model);
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
@@ -67,8 +67,12 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
 
         public ActionResult LogOff()
         {
+            Session[LOGGEDINUSER_SESSION_KEY] = null;
+            // Generate a new random GUID using System.Guid class
+            Guid tempCartId = Guid.NewGuid();
+            // Send tempCartId back to client as a cookie
+            Session[ShoppingCart.CartSessionKey] = tempCartId.ToString();
             FormsAuthentication.SignOut();
-            Session["LoggedInUser"] = null;
             return RedirectToAction("Index", "Home");
         }
 
@@ -89,9 +93,9 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
                 if (createStatus == AccountCreateStatus.Success)
                 {
                     MigrateShoppingCart(model.UserName);
-                    //belépés
+                    //bejelentkezés
+                    Session[LOGGEDINUSER_SESSION_KEY] = AccountManager.GetAccount(model);
                     FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
-                    Session["LoggedInUser"] = AccountManager.GetAccount(model);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -122,7 +126,7 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
         {
             if (ModelState.IsValid)
             {
-                Account currentUser = ((Account)Session["LoggedInUser"]);
+                Account currentUser = ((Account)Session[LOGGEDINUSER_SESSION_KEY]);
                 bool changePasswordSucceeded = AccountManager.ChangePassword(model, currentUser);
                 if (changePasswordSucceeded)
                 {
@@ -155,6 +159,8 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
             //visszaad egy üres shoppingcartot
             // és beállítja a felhasznalo id-javal a cartid-t
             var cart = ShoppingCart.GetCart(this.HttpContext);
+
+            //csak akkor hívja meg ha előtte nem volt bejelentkezve senki
             cart.MigrateCart(UserName);
             Session[ShoppingCart.CartSessionKey] = UserName;
         }
