@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using MusicStore.Models;
 using MusicStore.EntityContext;
 using MusicStore.AccountManagement.Filters;
+using MusicStore.Models.Database.Movie;
 
 namespace MusicStore.Controllers
 {
@@ -20,13 +21,12 @@ namespace MusicStore.Controllers
     [AdminFilter]
     public class StoreManagerController : Controller
     {
-        private readonly MusicStoreEntities db = new MusicStoreEntities();
+        private readonly MovieStoreEntities db = new MovieStoreEntities();
 
         // GET: /StoreManager/
         public ActionResult Index()
         {
-            var albums = this.db.Albums.Include(a => a.Artist).Include(a => a.Genre);
-            return View(albums.ToList());
+            return View(this.db.Movies.ToList());
         }
 
         // GET: /StoreManager/Details/5
@@ -36,12 +36,12 @@ namespace MusicStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = this.db.Albums.Find(id);
-            if (album == null)
+            Movie movie = this.db.Movies.Find(id);
+            if (movie == null)
             {
                 return HttpNotFound();
             }
-            return View(album);
+            return View(movie);
         }
 
         // GET: /StoreManager/Create
@@ -50,8 +50,8 @@ namespace MusicStore.Controllers
             //动态表达式
             //1.传递数据到UI
             //SelectList重要
-            ViewBag.ArtistId = new SelectList(this.db.Artists, "ArtistId", "Name");
-            ViewBag.GenreId = new SelectList(this.db.Genres, "GenreId", "Name");
+            ViewBag.MovieDirectorId = new SelectList(this.db.MovieDirectors, "MovieDirectorId", "MovieDirectorName");
+            ViewBag.MovieGenreId = new SelectList(this.db.MovieGenres, "MovieGenreId", "MovieGenreName");
             return View();
         }
 
@@ -60,21 +60,21 @@ namespace MusicStore.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="AlbumId,GenreId,ArtistId,Title,Price,AlbumArtUrl")] Album album)
+        public ActionResult Create([Bind(Include= "MovieId,MovieGenreId,MovieDirectorId,MovieTitle,MoviePrice,MoviePosterUrl")] Movie movie)
         {
             //如果输入正确，符合规则则添加专辑
             //规则来源于实体注解
             //重定向到index
             if (ModelState.IsValid)
             {
-                this.db.Albums.Add(album);
+                this.db.Movies.Add(movie);
                 this.db.SaveChanges();
                 return RedirectToAction("Index");
             }
             //否则返回Create View并且显示错误信息
-            ViewBag.ArtistId = new SelectList(this.db.Artists, "ArtistId", "Name", album.ArtistId);
-            ViewBag.GenreId = new SelectList(this.db.Genres, "GenreId", "Name", album.GenreId);
-            return View(album);
+            ViewBag.MovieDirectorId = new SelectList(this.db.MovieDirectors, "MovieDirectorId", "MovieDirectorName", movie.MovieDirectorId);
+            ViewBag.MovieGenreId = new SelectList(this.db.MovieGenres, "MovieGenreId", "MovieGenreName", movie.MovieGenreId);
+            return View(movie);
         }
 
         // GET: /StoreManager/Edit/5
@@ -84,14 +84,14 @@ namespace MusicStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = this.db.Albums.Find(id);
-            if (album == null)
+            Movie movie = this.db.Movies.Find(id);
+            if (movie == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ArtistId = new SelectList(this.db.Artists, "ArtistId", "Name", album.ArtistId);
-            ViewBag.GenreId = new SelectList(this.db.Genres, "GenreId", "Name", album.GenreId);
-            return View(album);
+            ViewBag.MovieDirectorId = new SelectList(this.db.MovieDirectors, "MovieDirectorId", "MovieDirectorName", movie.MovieDirectorId);
+            ViewBag.MovieGenreId = new SelectList(this.db.MovieGenres, "MovieGenreId", "MovieGenreName", movie.MovieGenreId);
+            return View(movie);
         }
 
         // POST: /StoreManager/Edit/5
@@ -99,17 +99,22 @@ namespace MusicStore.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="AlbumId,GenreId,ArtistId,Title,Price,AlbumArtUrl")] Album album)
+        public ActionResult Edit([Bind(Include= "MovieId,MovieGenreId,MovieDirectorId,MovieTitle,MoviePrice,MoviePosterUrl")] Movie movie)
         {
             if (ModelState.IsValid)
             {
-                this.db.Entry(album).State = EntityState.Modified;
+                Movie dbmovie = this.db.Movies.Single(m => m.MovieTitle == movie.MovieTitle);
+                dbmovie.MovieDirectorId = movie.MovieDirectorId;
+                dbmovie.MovieGenreId = movie.MovieGenreId;
+                dbmovie.MoviePosterUrl = movie.MoviePosterUrl;
+                dbmovie.MoviePrice = movie.MoviePrice;
+                dbmovie.MovieTitle = movie.MovieTitle;
                 this.db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ArtistId = new SelectList(this.db.Artists, "ArtistId", "Name", album.ArtistId);
-            ViewBag.GenreId = new SelectList(this.db.Genres, "GenreId", "Name", album.GenreId);
-            return View(album);
+            ViewBag.MovieDirectorId = new SelectList(this.db.MovieDirectors, "MovieDirectorId", "MovieDirectorName", movie.MovieDirectorId);
+            ViewBag.MovieGenreId = new SelectList(this.db.MovieGenres, "MovieGenreId", "MovieGenreName", movie.MovieGenreId);
+            return View(movie);
         }
 
         // GET: /StoreManager/Delete/5
@@ -119,7 +124,7 @@ namespace MusicStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = this.db.Albums.Find(id);
+            Movie album = this.db.Movies.Find(id);
             if (album == null)
             {
                 //404方法
@@ -133,8 +138,8 @@ namespace MusicStore.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Album album = this.db.Albums.Find(id);
-            this.db.Albums.Remove(album);
+            Movie movie = this.db.Movies.Find(id);
+            this.db.Movies.Remove(movie);
             this.db.SaveChanges();
             //采用重定向
             return RedirectToAction("Index");

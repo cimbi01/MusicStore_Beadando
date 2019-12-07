@@ -1,4 +1,4 @@
-﻿@model MusicStore.Models.Album
+﻿@model MusicStore.Models.Database.Movie.Movie
 
 @{
     ViewBag.Title = "Edit";
@@ -10,51 +10,51 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Album</h4>
+        <h4>Movie</h4>
         <hr />
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.AlbumId)
+        @Html.HiddenFor(model => model.MovieId)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.GenreId, "GenreId", new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MovieGenreId, "MovieGenreId", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("GenreId", String.Empty)
-                @Html.ValidationMessageFor(model => model.GenreId)
+                @Html.DropDownList("MovieGenreId", String.Empty)
+                @Html.ValidationMessageFor(model => model.MovieGenreId)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ArtistId, "ArtistId", new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MovieDirectorId, "MovieDirectorId", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("ArtistId", String.Empty)
-                @Html.ValidationMessageFor(model => model.ArtistId)
+                @Html.DropDownList("MovieDirectorId", String.Empty)
+                @Html.ValidationMessageFor(model => model.MovieDirectorId)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MovieTitle, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Title)
-                @Html.ValidationMessageFor(model => model.Title)
+                @Html.EditorFor(model => model.MovieTitle)
+                @Html.ValidationMessageFor(model => model.MovieTitle)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Price, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MoviePrice, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Price)
-                @Html.ValidationMessageFor(model => model.Price)
+                @Html.EditorFor(model => model.MoviePrice)
+                @Html.ValidationMessageFor(model => model.MoviePrice)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.AlbumArtUrl, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MoviePosterUrl, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.AlbumArtUrl)
-                @Html.ValidationMessageFor(model => model.AlbumArtUrl)
-            </div>
+                @Html.EditorFor(model => model.MoviePosterUrl)
+                @Html.ValidationMessageFor(model => model.MoviePosterUrl)
+             </div>
         </div>
 
         <div class="form-group">

@@ -1,4 +1,4 @@
-﻿@model MusicStore.Models.Album
+﻿@model MusicStore.Models.Database.Movie.Movie
 
 @{
     ViewBag.Title = "Details";
@@ -8,52 +8,52 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Album</h4>
+    <h4>Movie</h4>
 	<hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Artist.Name)
+            @Html.DisplayNameFor(model => model.MovieDirector.MovieDirectorName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Artist.Name)
+            @Html.DisplayFor(model => model.MovieDirector.MovieDirectorName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Genre.Name)
+            @Html.DisplayNameFor(model => model.MovieGenre.MovieGenreName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Genre.Name)
+            @Html.DisplayFor(model => model.MovieGenre.MovieGenreName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.MovieTitle)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.MovieTitle)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Price)
+            @Html.DisplayNameFor(model => model.MoviePrice)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Price)
+            @Html.DisplayFor(model => model.MoviePrice)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.AlbumArtUrl)
+            @Html.DisplayNameFor(model => model.MoviePosterUrl)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.AlbumArtUrl)
+            @Html.DisplayFor(model => model.MoviePosterUrl)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.AlbumId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MovieId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
