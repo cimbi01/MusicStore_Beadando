@@ -8,7 +8,7 @@ using System.Web;
 
 namespace MusicStore.EntityContext
 {
-    public class MovieSampleData : DropCreateDatabaseAlways<MovieStoreEntities>
+    public class MovieSampleData : DropCreateDatabaseIfModelChanges<MovieStoreEntities>
     {
         protected override void Seed(MovieStoreEntities context)
         {
@@ -32,27 +32,32 @@ namespace MusicStore.EntityContext
 
             new List<Movie>()
             {
-                new Movie { MovieTitle = "Titanik",
+                new Movie {
+                    MovieTitle = "Titanik",
                     MovieGenre = movie_genres.Single(g => g.MovieGenreName == "Dráma"),
                     MoviePrice = 8.99M,
                     MovieDirector = movie_directors.Single(d => d.MovieDirectorName == "James Cameron"),
                     MoviePosterUrl = "/Content/Images/placeholder.gif" },
-                new Movie { MovieTitle = "A Gyűrűk Ura: A király visszatér",
+                new Movie {
+                    MovieTitle = "A Gyűrűk Ura: A király visszatér",
                     MovieGenre = movie_genres.Single(g => g.MovieGenreName == "Kaland"),
                     MoviePrice = 8.99M,
                     MovieDirector = movie_directors.Single(d => d.MovieDirectorName == "Peter Jackson"),
                     MoviePosterUrl = "/Content/Images/placeholder.gif" },
-                new Movie { MovieTitle = "Schindler listája",
+                new Movie {
+                    MovieTitle = "Schindler listája",
                     MovieGenre = movie_genres.Single(g => g.MovieGenreName == "Életrajzi"),
                     MoviePrice = 8.99M,
                     MovieDirector = movie_directors.Single(d => d.MovieDirectorName == "Steven Spielberg"),
                     MoviePosterUrl = "/Content/Images/placeholder.gif" },
-                new Movie { MovieTitle = "A tégla",
+                new Movie {
+                    MovieTitle = "A tégla",
                     MovieGenre = movie_genres.Single(g => g.MovieGenreName == "Krimi"),
                     MoviePrice = 8.99M,
                     MovieDirector = movie_directors.Single(d => d.MovieDirectorName == "Martin Scorsese"),
                     MoviePosterUrl = "/Content/Images/placeholder.gif" },
-                new Movie { MovieTitle = "Vissza a jövőbe",
+                new Movie {
+                    MovieTitle = "Vissza a jövőbe",
                     MovieGenre = movie_genres.Single(g => g.MovieGenreName == "Vígjáték"),
                     MoviePrice = 8.99M,
                     MovieDirector = movie_directors.Single(d => d.MovieDirectorName == "Robert Zemeckis"),

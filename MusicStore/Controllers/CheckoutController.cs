@@ -37,7 +37,7 @@ namespace MusicStore.Controllers
                 //Process the order
                 var cart = ShoppingCart.GetCart(HttpContext);
                 cart.CreateOrder(order);
-                return RedirectToAction("Complete", new { id = order.MovieOrderId });
+                return RedirectToAction("Complete", new { errortype = order.MovieOrderId });
             }
             catch
             {

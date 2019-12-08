@@ -10,6 +10,10 @@ using MusicStore.Models;
 using MusicStore.EntityContext;
 using MusicStore.AccountManagement.Filters;
 using MusicStore.Models.Database.Movie;
+using MusicStore.ViewModels;
+using System.Threading.Tasks;
+using System.IO;
+using System.Text;
 
 namespace MusicStore.Controllers
 {
@@ -19,8 +23,9 @@ namespace MusicStore.Controllers
     /// </summary>
     //暂时无法ASP WEB管理器
     [AdminFilter]
-    public class StoreManagerController : Controller
+    public class StoreManagerController : AsyncController
     {
+        private static readonly string[] FILE_EXTENSIONS = {"csv"};
         private readonly MovieStoreEntities db = new MovieStoreEntities();
 
         // GET: /StoreManager/
@@ -143,6 +148,116 @@ namespace MusicStore.Controllers
             this.db.SaveChanges();
             //采用重定向
             return RedirectToAction("Index");
+        }
+
+        //Szebb lenne int> minden int-hez 0-tól hibáktípusok számáig
+        public ActionResult UploadFile(string error)
+        {
+            if (error != null)
+            {
+                ModelState.AddModelError("", error);
+            }
+            return View();
+        }
+        /// <summary>
+        /// File feltöltés
+        /// Csak csv-t fogad el
+        /// </summary>
+        ///<returns></returns>
+        public async Task<ActionResult> UploadFileProcess(HttpPostedFileBase file)
+        {
+            // ha nem lett file kiválasztva
+            if (file == null)
+            {
+                return RedirectToAction("UploadFile",
+                    new { error = "No file found." });
+            }
+            //Ha nem megfelelő a file végződés
+            if (!FILE_EXTENSIONS.Contains(file.FileName.Split('.').Last()))
+            {
+                return RedirectToAction("UploadFile",
+                    new { error = "The file extension is incorrect.\nCorrect file extensions: csv" });
+            }
+            List<string> csvData = new List<string>();
+            using (StreamReader reader = new StreamReader(file.InputStream, Encoding.Default,  true))
+            {
+                while (!reader.EndOfStream)
+                {
+                    csvData.Add(reader.ReadLine());
+                }
+            }
+            for (int i = 0; i < csvData.Count; i++)
+            {
+                string line = csvData[i];
+                string[] datas = line.Split(';');
+                if(datas.Length != 5)
+                {
+                    return RedirectToAction("UploadFile",
+                        new { error = "Incorrect file format. Line: " + (line + 1) + "\nCorrect file format: MovieTitle;MovieGenre;MoviePrice;DirectorName;PosterUrl\nEncoding:ANSI" });
+                }
+                string title = datas[0];
+                string genre_in = datas[1];
+                MovieGenre genre = this.db.MovieGenres.FirstOrDefault(g => g.MovieGenreName == genre_in);
+                decimal price = Convert.ToDecimal(datas[2]);
+                string director_in = datas[3];
+                MovieDirector director = this.db.MovieDirectors.FirstOrDefault(d => d.MovieDirectorName == director_in);
+                string posterUrl = datas[4];
+                // a megadott director nincs benne az adatbázisban
+                if(director == null)
+                {
+                    return RedirectToAction("UploadFile",
+                        new { error = "The given director: " + director_in + " cannot be found in the database" });
+                }
+                if(genre == null)
+                {
+                    return RedirectToAction("UploadFile",
+                        new { error = "The given genre: " + genre_in + " cannot be found in the database" });
+                }
+                // ha az adott film már szerepel a listában, akkor csak átírjuk az adatait
+                Movie movie = this.db.Movies.FirstOrDefault(m => m.MovieTitle == title);
+                if (movie != null)
+                {
+                    movie.MovieTitle = title;
+                    movie.MovieGenre = genre;
+                    movie.MoviePrice = price;
+                    movie.MovieDirector = director;
+                    movie.MoviePosterUrl = posterUrl;
+                }
+                // ha nem volt benne az adatbázisban
+                else
+                {
+                    this.db.Movies.Add(new Movie()
+                    {
+                        MovieTitle = title,
+                        MovieGenre = genre,
+                        MoviePrice = price,
+                        MovieDirector = director,
+                        MoviePosterUrl = posterUrl
+                    });
+                }
+                this.db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Elküldi az adatbázis tartalmát
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult DownloadFiles()
+        {
+            string lines = "";
+            foreach (var item in this.db.Movies)
+            {
+                string title = item.MovieTitle;
+                string genre = item.MovieGenre.MovieGenreName;
+                string price = item.MoviePrice.ToString();
+                string director = item.MovieDirector.MovieDirectorName;
+                string poster = item.MoviePosterUrl;
+                lines += title + ";" + genre + ";" + price + ";" + director + ";" + poster + '\n';
+             }
+            var byteArray = Encoding.Default.GetBytes(lines);
+            return File(byteArray, "text/plain");
         }
 
         protected override void Dispose(bool disposing)

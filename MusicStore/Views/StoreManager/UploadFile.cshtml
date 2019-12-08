@@ -1,0 +1,17 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<title>File Upload</title>
+@Html.ValidationSummary(true, "File upload was unsuccessful. Please correct the errors and try again.")
+<br>
+@using (Html.BeginForm("UploadFileProcess",
+                        "StoreManager",
+                        FormMethod.Post,
+                        new { enctype = "multipart/form-data" }))
+{
+    <label for="file">Upload file:</label>
+    <input type="file" name="file" id="file" accept=".csv"/><br><br>
+    <input type="submit" value="Upload File" />
+    <br><br>
+}

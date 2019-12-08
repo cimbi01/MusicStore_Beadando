@@ -65,14 +65,14 @@ namespace MusicStore.Controllers
             // Remove the item from the cart
             var cart = ShoppingCart.GetCart(this.HttpContext);
             // Get the name of the album to display confirmation
-            string albumName = storeDB.MovieCarts
+            string movieName = storeDB.MovieCarts
             .Single(item => item.MovieRecordId == id).Movie.MovieTitle;
             // Remove from cart
             int itemCount = cart.RemoveFromCart(id);
             // Display the confirmation message
             var results = new ShoppingCartRemoveViewModel()
             {
-                Message = Server.HtmlEncode(albumName) +
+                Message = Server.HtmlEncode(movieName) +
                 "has been removed from your shopping cart.",
                 CartTotal=cart.GetTotal(),
                 CartCount=cart.GetCount(),
